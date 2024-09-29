@@ -1,0 +1,99 @@
+<form [formGroup]="customerForm" (ngSubmit)="saveForm()">
+  <div class="form-group required mb-2">
+    <label for="title">Title</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      aria-describedby="title"
+      placeholder="Enter title"
+      formControlName="title"
+    />
+    <div
+      class="text-danger"
+      *ngIf="
+        customerForm.get('title')?.invalid &&
+        (customerForm.get('title')?.dirty || customerForm.get('title')?.touched)
+      "
+    >
+      Title is required.
+    </div>
+  </div>
+  <div class="form-group required mb-2">
+    <label for="email">Email</label>
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      aria-describedby="email"
+      placeholder="Enter email"
+      formControlName="email"
+      required
+    />
+    <div
+      class="text-danger"
+      *ngIf="
+        customerForm.get('email')?.hasError('required') &&
+        (customerForm.get('email')?.dirty || customerForm.get('email')?.touched)
+      "
+    >
+      Email is required.
+    </div>
+
+    <div
+      class="text-danger"
+      *ngIf="
+        !customerForm.get('email')?.hasError('required') &&
+        customerForm.get('email')?.hasError('email')
+      "
+    >
+      Please enter a valid email address.
+    </div>
+  </div>
+  <div class="form-group required mb-2">
+    <label for="region">Region</label>
+    <ngx-select
+      [allowClear]="true"
+      id="region"
+      [items]="regionList"
+      aria-describedby="region"
+      formControlName="region"
+    ></ngx-select>
+    <div
+      class="text-danger"
+      *ngIf="
+        customerForm.get('region')?.invalid &&
+        (customerForm.get('region')?.dirty ||
+          customerForm.get('region')?.touched)
+      "
+    >
+      Region is required.
+    </div>
+  </div>
+  <div class="form-group required mb-3">
+    <label for="country">Country</label>
+    <ngx-select
+      [allowClear]="true"
+      id="country"
+      [items]="
+        countryList
+          | filterCountriesByRegion : customerForm.get('region')?.value
+      "
+      aria-describedby="country"
+      formControlName="country"
+      optionValueField="country"
+      optionTextField="country"
+    ></ngx-select>
+    <div
+      class="text-danger"
+      *ngIf="
+        customerForm.get('country')?.invalid &&
+        (customerForm.get('country')?.dirty ||
+          customerForm.get('country')?.touched)
+      "
+    >
+      Country is required.
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
